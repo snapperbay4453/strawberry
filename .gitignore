@@ -1,1 +1,5 @@
-.env-dev
+.env-app-dev
+.env-db-dev
+.env-app-prod
+.env-db-prod
+venv

@@ -5,20 +5,20 @@ services:
     image: postgres:12-alpine
     volumes:
       - postgres-data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_DB=strawberry-dev
-      - POSTGRES_USER=strawberry
-      - POSTGRES_PASSWORD=strawberry
+    env_file:
+      - ./.env-db-dev
 
-  web:
-    build: ./app
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile-dev
     command: python manage.py runserver 0:8000
     volumes:
       - ./app/:/usr/src/app/
     ports:
       - 8000:8000
     env_file:
-      - ./.env-dev
+      - ./.env-app-dev
     depends_on:
       - db
 

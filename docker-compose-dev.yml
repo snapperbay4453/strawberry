@@ -2,25 +2,39 @@ version: '3'
 
 services:
   db:
+    container_name: db
     image: postgres:12-alpine
     volumes:
       - postgres-data:/var/lib/postgresql/data/
     env_file:
       - ./.env-db-dev
 
-  app:
+  backend:
+    container_name: backend
     build:
-      context: ./app
+      context: ./backend
       dockerfile: Dockerfile-dev
     command: python manage.py runserver 0:8000
     volumes:
-      - ./app/:/usr/src/app/
+      - ./backend/:/usr/src/app/
     ports:
       - 8000:8000
     env_file:
-      - ./.env-app-dev
+      - ./.env-backend-dev
     depends_on:
       - db
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env-frontend
+    depends_on:
+      - backend
 
 volumes:
   postgres-data:
